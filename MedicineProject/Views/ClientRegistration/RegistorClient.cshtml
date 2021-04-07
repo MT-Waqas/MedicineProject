@@ -1,0 +1,158 @@
+﻿@model MedicineProject.Models.BLs.Client
+@{
+    ViewBag.Title = "RegistorClient";
+    Layout = "~/Views/Shared/SuperAdmintMaster.cshtml";
+}
+
+<div class="col-sm-12">
+    <div class="panel panel-default panel-border-color panel-border-color-primary">
+        <div class="panel-heading panel-heading-divider">Registor Client<span class="panel-subtitle">Enter Valid Information</span></div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("RegistorClient", "ClientRegistration", FormMethod.Post))
+            {
+
+                @Html.HiddenFor(m=>m.ClientID)
+               
+
+                <div class="form-group">
+                    <label>Client Name</label>
+                    @Html.TextAreaFor(n => n.ClientName, new { @class = "form-control", @placeholder = "Enter Client Name" })
+
+                </div>
+                <div class="form-group">
+                    <label>Contact</label>
+                    @Html.TextAreaFor(n => n.Contact, new { @class = "form-control", @placeholder = "Enter Contact" })
+
+                </div>
+
+                <div class="form-group">
+                    <label>CNIC</label>
+                    @Html.TextBoxFor(m => m.CNIC, new { @class = "form-control", @placeholder = "Enter CNIC" })
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Enter address" })
+                </div>
+
+
+                <div class="form-group">
+                    <label>Email</label>
+                    @Html.TextBoxFor(m => m.ClientEmail, new { @class = "form-control", @placeholder = "Enter Email" })
+                </div>
+                
+                
+                 <div class="form-group">
+                    <label>Password</label>
+                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter Password" })
+                </div>
+                
+                
+
+                
+
+
+                <p class="text-center">
+                    <button type="submit" class="btn btn-space btn-primary">Submit</button>
+                </p>
+
+            }
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>CNIC</th>
+                                    <th>Contact</th>
+                                    <th>Address</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in ViewBag.Get)
+                                {
+                                    <tr>
+                                        <td>@item.ClientName</td>
+                                        <td>@item.CNIC</td>
+                                        <td>@item.Contact</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.ClientEmail</td>
+                                      
+                                     
+                                        <td>
+                                            @Html.ActionLink("Edit", "Update", "ClientRegistration", new { ID = item.ClientID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
+
+                                            @Html.ActionLink("Delete", "Delete", "ClientRegistration", new { ID = item.ClientID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+@section script{
+    
+    
+    <script>
+
+        $(document).ready(function () {
+
+            if(@Html.Raw(TempData["bit"])==1)
+            {
+                Mm("Insert");
+            }
+            else if(@Html.Raw(TempData["bit"])==2)
+            {
+                Mm("Update");
+            }
+            else if(@Html.Raw(TempData["bit"])==3)
+            {
+                Mm("Delete");
+            }
+
+        })
+
+
+        function Mm(pm)
+        {
+            if(pm=="Insert")
+            {
+                toastr.success("Add Data sucessfully");
+            }
+            else if(pm=="Update")
+            {
+                toastr.success("updated Data sucessfully");
+            }
+            else if(pm=="Delete")
+            {
+                toastr.success("Deleted Data sucessfully");
+            }
+        }
+
+
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    }
