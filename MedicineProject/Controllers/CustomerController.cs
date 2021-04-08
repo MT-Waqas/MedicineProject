@@ -8,8 +8,7 @@ using MedicineProject.Models.BLs;
 namespace MedicineProject.Controllers
 {
     public class CustomerController : Controller
-    {
-       
+    { 
         public ActionResult GetCutomer()
         {
             int id = 1;
