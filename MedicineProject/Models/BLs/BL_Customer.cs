@@ -18,7 +18,7 @@ namespace MedicineProject.Models.BLs
                 
                 new SqlParameter("CustomerName",customer.CustomerName),
                 new SqlParameter("Address",customer.Address),
-                   new SqlParameter("Contact",customer.Contact),
+                new SqlParameter("Contact",customer.Contact),
                 new SqlParameter("ClientID",1),
                 new SqlParameter("type",Actions.Insert)
             };

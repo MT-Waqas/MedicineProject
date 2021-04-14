@@ -1,11 +1,12 @@
 ﻿@model MedicineProject.Models.BLs.CompanyPayment
 @{
-    ViewBag.Title = "GetCompanyPayment";
+    ViewBag.Title = "CompanyPayment";
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
+
 <div class="card-body">
-    <h4 class="mt-0 header-title">Company Registory</h4>
+    <h4 class="mt-0 header-title">Company Payment</h4>
     <p class="text-muted font-14">Please Enter the Valid Information...@*</code>*@.</p>
     <div class="general-label">
         @*<form class="mb-0">*@
@@ -14,7 +15,7 @@
         {
             <div class="form-group bmd-form-group">
                 <label for="exampleInputEmail1" class="bmd-label-floating ">Company Name</label>
-                @Html.TextBoxFor(x => x.CompanyID, new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "---Select the Company", new { @class = "form-control" })
 
                 <span class="bmd-help">Enter valid Name..</span>
             </div>
@@ -42,10 +43,11 @@
 
                 <label for="exampleInputPassword1" class="bmd-label-floating">Payment Date</label>
                 <h6 class="text-muted mt-3"></h6>
-                @Html.HiddenFor(x => x.PaymentDate, new { @class = "form-control", id = "sdate" })
-
-                <input type="date" id="pdate" class="form-control" />
+                @*@Html.HiddenFor(x => x.PaymentDate, new { @class = "form-control", id = "sdate" })*@
+                @Html.TextBoxFor(x => x.PaymentDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+                @*<input type="date" id="pdate" class="form-control" />*@
                 @*<input type="text" id="tttdate"  class="form-control" />*@
+                @*<%= Html.EditorFor(x=>x.PaymentDate)%>*@
                 <span class="bmd-help">Enter valid Payment Date..</span>
             </div>
 
@@ -80,13 +82,13 @@
                     <table id="myTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Employee Name</th>
-                                <th>CNIC</th>
-                                <th>Address</th>
-                                <th>DateOfJoining</th>
-                                <th>DateOfResign</th>
-                                <th>Salary</th>
-                                <th>Designation</th>
+                                <th>Company Name</th>
+                                <th>TotalAmount</th>
+                                <th>PaidAmount</th>
+                                <th>RemainingAmount</th>
+                                <th>PaymentDate</th>
+                                <th>BankName</th>
+                                <th>ReceiptNumber</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -101,9 +103,8 @@
                                     <td>@item.PaymentDate</td>
                                     <td>@item.BankName</td>
                                     <td>@item.ReceiptNumber</td>
-                                    <td>@item.Designation</td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Get", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
+                                        @Html.ActionLink("Edit", "CompanyPayment", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
                                         @Html.ActionLink("Delete", "Delete", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
                                     </td>
 
@@ -119,23 +120,52 @@
         @*</form>*@
     </div>
 </div>
-@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
-<script type="text/javascript">
-    $(document).ready(function ()
-    {
-        alert('Heloo');
-        var date = '';
-        $("#pdate").change(function (event) {
-            var selected = $(this).val();
-            $('#sdate').val(selected);
-        });
-        // $('#1id').change(function ()
-        // {
-        //     date =
-        //     alert( $('#2id').html(date) );
+@section script{
 
-        //});
 
-    });
+    <script>
 
-</script>
+        $(document).ready(function () {
+
+
+            if(@Html.Raw(TempData["bit"])==1)
+            {
+                Mm("Insert");
+            }
+            else if(@Html.Raw(TempData["bit"])==2)
+            {
+                Mm("Update");
+            }
+            else if(@Html.Raw(TempData["bit"])==3)
+            {
+                Mm("Delete");
+            }
+
+        })
+
+
+        function Mm(pm)
+        {
+            if(pm=="Insert")
+            {
+                toastr.success("Add Data sucessfully");
+            }
+            else if(pm=="Update")
+            {
+                toastr.success("updated Data sucessfully");
+            }
+            else if(pm=="Delete")
+            {
+                toastr.success("Deleted Data sucessfully");
+            }
+        }
+
+
+
+    </script>
+
+
+
+
+}
+

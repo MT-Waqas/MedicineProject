@@ -165,6 +165,8 @@
     <Compile Include="Controllers\CompanyPaymentController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\MedicineController.cs" />
+    <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2198,9 +2200,11 @@
     <Content Include="SuperAdmin\Toster\tostercs\toastr.less" />
     <Content Include="SuperAdmin\Toster\tostercs\toastr.scss" />
     <Content Include="Views\Customer\GetCutomer.cshtml" />
-    <Content Include="Views\Employee\GetEmployee.cshtml" />
-    <Content Include="Views\Company\GetCompany.cshtml" />
-    <Content Include="Views\CompanyPayment\GetCompanyPayment.cshtml" />
+    <Content Include="Views\Company\Company.cshtml" />
+    <Content Include="Views\Employee\Employee.cshtml" />
+    <Content Include="Views\CompanyPayment\CompanyPayment.cshtml" />
+    <Content Include="Views\Medicine\Medicine.cshtml" />
+    <Content Include="Views\Purchase\Purchase.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

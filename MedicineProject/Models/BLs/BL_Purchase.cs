@@ -14,26 +14,28 @@ namespace MedicineProject.Models.BLs
         {
             SqlParameter[] prm = new SqlParameter[]
             {
+                new SqlParameter("CompanyID",purchase.CompanyID),
                 new SqlParameter("MedicineID",purchase.MedicineID),
-               new SqlParameter("Quantity",purchase.Quantity),
-               new SqlParameter("ItemPrice",purchase.ItemPrice),
-                 new SqlParameter("DateOfExpiry",purchase.DateOfExpiry),
+                new SqlParameter("Quantity",purchase.Quantity),
+                new SqlParameter("ItemPrice",purchase.ItemPrice),
+                new SqlParameter("DateOfExpiry",purchase.DateOfExpiry),
                 new SqlParameter("DateOfManufacturing",purchase.DateOfManufacturing),
-               new SqlParameter("ClientID",purchase.ClientID),
-               new SqlParameter("type",Actions.Insert)
+                new SqlParameter("ClientID",1),
+                new SqlParameter("type",Actions.Insert)
             };
             Helper.sp_ExecuteQuery("sp_Purchase", prm);
         }
         public static void Update(Purchase purchase)
         {
             SqlParameter[] prm = new SqlParameter[]
-           {
+            {
+               new SqlParameter("CompanyID",purchase.CompanyID),
                new SqlParameter("PurchaseID",purchase.PurchaseID),
                new SqlParameter("MedicineID",purchase.MedicineID),
                new SqlParameter("Quantity",purchase.Quantity),
                new SqlParameter("ItemPrice",purchase.ItemPrice),
-                new SqlParameter("DateOfManufacturing",purchase.DateOfManufacturing),
-                new SqlParameter("DateOfExpiry",purchase.DateOfExpiry),
+               new SqlParameter("DateOfManufacturing",purchase.DateOfManufacturing),
+               new SqlParameter("DateOfExpiry",purchase.DateOfExpiry),
                new SqlParameter("type",Actions.Update)
            };
             Helper.sp_ExecuteQuery("sp_Purchase", prm);
@@ -60,6 +62,7 @@ namespace MedicineProject.Models.BLs
             if (dt.Rows.Count > 0)
             {
                 purchase.PurchaseID = Convert.ToInt32(dt.Rows[0]["PurchaseID"]);
+                purchase.CompanyID = Convert.ToInt32(dt.Rows[0]["CompanyID"]);
                 purchase.MedicineID = Convert.ToInt32(dt.Rows[0]["MedicineID"]);
                 purchase.MedicineName = Convert.ToString(dt.Rows[0]["MedicineName"]);
                 purchase.CompanyName = Convert.ToString(dt.Rows[0]["CompanyName"]);
@@ -70,25 +73,27 @@ namespace MedicineProject.Models.BLs
             }
             return purchase;
         }
-        public static List<Purchase> GetPurchases()
+        public static List<Purchase> GetPurchases(int ClientID)
         {
             List<Purchase> purchases = new List<Purchase>();
             SqlParameter[] prm = new SqlParameter[]
             {
-                //new SqlParameter("PurchaseID",ID),
+                new SqlParameter("ClientID",ClientID),
                 new SqlParameter("type",Actions.Select)
             };
             DataTable dt = Helper.sp_Execute_Table("sp_Purchase", prm);
             foreach (DataRow dr in dt.Rows)
             {
                 Purchase purchase = new Purchase();
-                purchase.PurchaseID = Convert.ToInt32(dt.Rows[0]["PurchaseID"]);
-                purchase.MedicineID = Convert.ToInt32(dt.Rows[0]["MedicineID"]);
-                purchase.MedicineName = Convert.ToString(dt.Rows[0]["MedicineName"]);
-                purchase.CompanyName = Convert.ToString(dt.Rows[0]["CompanyName"]);
-                purchase.Quantity = Convert.ToInt32(dt.Rows[0]["Quantity"]);
-                purchase.DateOfManufacturing = Convert.ToDateTime(dt.Rows[0]["DateOfManufacturing"]);
-                purchase.DateOfExpiry = Convert.ToDateTime(dt.Rows[0]["DateOfExpiry"]);
+                purchase.PurchaseID = Convert.ToInt32(dr["PurchaseID"]);
+                purchase.CompanyID = Convert.ToInt32(dr["CompanyID"]);
+                purchase.MedicineID = Convert.ToInt32(dr["MedicineID"]);
+                purchase.MedicineName = Convert.ToString(dr["MedicineName"]);
+                purchase.CompanyName = Convert.ToString(dr["CompanyName"]);
+                purchase.Quantity = Convert.ToInt32(dr["Quantity"]);
+                purchase.ItemPrice = Convert.ToDecimal(dr["ItemPrice"]);
+                purchase.DateOfManufacturing = Convert.ToDateTime(dr["DateOfManufacturing"]);
+                purchase.DateOfExpiry = Convert.ToDateTime(dr["DateOfExpiry"]);
                 purchases.Add(purchase);
             }
             return purchases;
@@ -100,6 +105,7 @@ namespace MedicineProject.Models.BLs
         public int PurchaseID { get; set; }
         public int MedicineID { get; set; }
         public string MedicineName { get; set; }
+        public int CompanyID { get; set; }
         public string CompanyName { get; set; }
         public int Quantity { get; set; }
         public decimal ItemPrice { get; set; }

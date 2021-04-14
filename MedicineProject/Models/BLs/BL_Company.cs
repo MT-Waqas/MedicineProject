@@ -17,7 +17,7 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("CompanyName",cmp.CompanyName),
                 new SqlParameter("Address",cmp.Address),
                 new SqlParameter("Contact",cmp.Contact),
-                new SqlParameter("ClientID",cmp.ClientID),
+                new SqlParameter("ClientID",1),
                 new SqlParameter("type",Actions.Insert)
             };
             Helper.sp_ExecuteQuery("sp_Company", prm);
@@ -30,7 +30,6 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("CompanyName",cmp.CompanyName),
                 new SqlParameter("Address",cmp.Address),
                 new SqlParameter("Contact",cmp.Contact),
-           
                 new SqlParameter("type",Actions.Update)
             };
             Helper.sp_ExecuteQuery("sp_Company", prm);

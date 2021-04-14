@@ -43,6 +43,7 @@ namespace MedicineProject.Controllers
         {
 
             BL_Client.Delete(id);
+            TempData["bit"] = 3;
             return RedirectToAction("RegistorClient");
         }
 	}

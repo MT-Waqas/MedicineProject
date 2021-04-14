@@ -1,6 +1,7 @@
 ﻿using MedicineProject.Models.Custom;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace MedicineProject.Models.BLs
         {
             SqlParameter[] prm = new SqlParameter[]
             {
-                 new SqlParameter("CustomerID",medicine.MedicineName),
-                new SqlParameter("DateOfOrder",medicine.CompanyID),
-                new SqlParameter("ClientID",medicine.ClientID),
+                 new SqlParameter("MedicineName",medicine.MedicineName),
+                new SqlParameter("CompanyID",medicine.CompanyID),
+                new SqlParameter("ClientID",1),
                 new SqlParameter("type",Actions.Insert)
             };
             Helper.sp_ExecuteQuery("sp_Medicine", prm);
@@ -27,7 +28,7 @@ namespace MedicineProject.Models.BLs
             {
                 new SqlParameter("MedicineID",medicine.MedicineID),
                 new SqlParameter("MedicineName",medicine.MedicineName),
-                new SqlParameter("DateOfOrder",medicine.CompanyID),
+                new SqlParameter("CompanyID",medicine.CompanyID),
                 new SqlParameter("ClientID",medicine.ClientID),
                 new SqlParameter("type",Actions.Update)
             };
@@ -83,8 +84,11 @@ namespace MedicineProject.Models.BLs
     }
     public class Medicine
     {
+        
         public int MedicineID { get; set; }
+        [Required(ErrorMessage = "Please enter Medicine name.")]
         public string MedicineName { get; set; }
+        [Required]
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
         public int IsDelete { get; set; }

@@ -9,16 +9,20 @@ namespace MedicineProject.Controllers
 {
     public class EmployeeController : Controller
     {
-        // GET: Employee
-        public ActionResult GetEmployee(int? ID)
-        {
+        public ActionResult Employee(int? ID)
+        {   
+            ViewBag.Employees = BL_Employee.GetEmployees(Convert.ToInt32(1));
             if (ID > 0)
             {
-                BL_Employee.GetEmployee(Convert.ToInt32(ID));
+                Employee emp = BL_Employee.GetEmployee(Convert.ToInt32(ID));
+                return View(emp);
             }
-            ViewBag.Employees = BL_Employee.GetEmployees(Convert.ToInt32(1));
-            return View();
+            else
+            {
+                return View();
+            }
         }
+
         [HttpPost]
         public ActionResult Save(Employee emp)
         {
@@ -30,13 +34,12 @@ namespace MedicineProject.Controllers
             {
                 BL_Employee.Save(emp);
             }
-
-            return RedirectToAction("GetEmployee");
+            return RedirectToAction("Employee");
         }
         public ActionResult Delete(int ID)
         {
             BL_Employee.Delete(ID);
-            return RedirectToAction("GetEmployee");
+            return RedirectToAction("Employee");
         }
     }
 }
