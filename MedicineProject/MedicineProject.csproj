@@ -160,13 +160,20 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\CustomerOrdersController.cs" />
+    <Compile Include="Controllers\CustomerSaleController.cs" />
+    <Compile Include="Controllers\PaymenthMethodController.cs" />
+    <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\ClientRegistrationController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\CompanyPaymentController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomerPaymentController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\MedicineController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
+    <Compile Include="Controllers\SaleController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -183,11 +190,19 @@
     <Compile Include="Models\BLs\BL_EmployeeVisit.cs" />
     <Compile Include="Models\BLs\BL_Employee_Expense.cs" />
     <Compile Include="Models\BLs\BL_Expense_Head.cs" />
-    <Compile Include="Models\BLs\BL_Items.cs" />
+    <Compile Include="Models\BLs\BL_Invoice.cs" />
+    <Compile Include="Models\BLs\BL_PayMethods.cs" />
+    <Compile Include="Models\BLs\BL_SaleItems.cs" />
     <Compile Include="Models\BLs\BL_Medicine.cs" />
     <Compile Include="Models\BLs\BL_Order.cs" />
     <Compile Include="Models\BLs\BL_Purchase.cs" />
+    <Compile Include="Models\BLs\BL_Purchase_Order.cs" />
+    <Compile Include="Models\BLs\BL_Stock.cs" />
+    <Compile Include="Models\BLs\validation.cs" />
+    <Compile Include="Models\BLs\ViewModel.cs" />
     <Compile Include="Models\Custom\Actions.cs" />
+    <Compile Include="Models\Custom\Custom.cs" />
+    <Compile Include="Models\Custom\Image.cs" />
     <Compile Include="Models\DAL\Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -290,6 +305,7 @@
     <Content Include="assets\js\jquery.scrollTo.min.js" />
     <Content Include="assets\js\jquery.slimscroll.js" />
     <Content Include="assets\js\modernizr.min.js" />
+    <Content Include="assets\js\notifications.js" />
     <Content Include="assets\js\popper.min.js" />
     <Content Include="assets\js\waves.js" />
     <Content Include="assets\pages\alertify-init.js" />
@@ -2205,11 +2221,20 @@
     <Content Include="Views\CompanyPayment\CompanyPayment.cshtml" />
     <Content Include="Views\Medicine\Medicine.cshtml" />
     <Content Include="Views\Purchase\Purchase.cshtml" />
+    <Content Include="Views\Shared\Details.cshtml" />
+    <Content Include="Views\Purchase\All_Purchases.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\CustomerPayment\CustomerPayment.cshtml" />
+    <Content Include="Views\Stock\Stock.cshtml" />
+    <Content Include="Views\CustomerOrders\CustomerOrders.cshtml" />
+    <Content Include="Views\CustomerSale\CustomerSales.cshtml" />
+    <Content Include="Views\PaymenthMethod\PaymentMethod.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\plugins\RWD-Table-Patterns\dist\" />
     <Folder Include="assets\plugins\RWD-Table-Patterns\src\" />
+    <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

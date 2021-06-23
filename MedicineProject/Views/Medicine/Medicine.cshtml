@@ -5,65 +5,78 @@
 }
 
 <h2>Medicine</h2>
-<div class="card-body">
-    <h4 class="mt-0 header-title">Medicine Registration</h4>
-    <p class="text-muted font-16">Please Enter the Valid Information</p>
-    <div class="general-label">
-        @using (Html.BeginForm("Save", "Medicine", FormMethod.Post))
-        {
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating">Medicine Name</label>
-                @Html.TextBoxFor(x => x.MedicineName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(x=>x.MedicineName,"",new {@class="text-danger" })
-                <div class="bmd-help">Enter the Valid Medicine Name</div>
-            </div>
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating">Medicine Name</label>
-                @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "--Select the Company Name--", new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.MedicineName, "", new { @class = "text-danger" })
-                <div class="bmd-help">Enter the Valid Medicine Name</div>
-            </div>
-            @Html.HiddenFor(x => x.MedicineID, new { @class = "form-control" })
-            <input type="submit" value="Submit" class="btn btn-success" />
-            <input type="button" value="Cancel" class="btn dtp-btn-cancel" />
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h4 class="mt-0 header-title">Medicine Registration</h4>
+                <p class="text-muted font-16">Please Enter the Valid Information</p>
+                <div class="general-label">
+                    @using (Html.BeginForm("Medicine", "Medicine", FormMethod.Post,new { @enctype="multipart/form-data" }))
+                    {
+                        <div class="form-group bmd-form-group">
+                            <label for="exampleInputEmail1" class="bmd-label-floating">Medicine Name</label>
+                            @Html.TextBoxFor(x => x.MedicineName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.MedicineName, "", new { @class = "text-danger" })
+                            @*<div class="bmd-help">Enter the Valid Medicine Name</div>*@
+                        </div>
+                        <div class="form-group bmd-form-group">
+                            <label for="exampleInputEmail1" class="bmd-label-floating">Company Name</label>
+                            @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "Select the Company", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.CompanyID, "", new { @class = "text-danger" })
+                            @*<div class="bmd-help">Enter the Valid Company Name</div>*@
+                        </div>
+                        <div class="form-group bmd-form-group">
+                            <input type="file" name="UploadFile" class="" />
+                        </div>
+                        @Html.HiddenFor(x => x.MedicineID)
+                        <br />
+                        <br />
+                        <div class="text-center">
+                            <input type="submit" value="Submit" class="btn btn-raised btn-primary" />
+                            <input type="button" value="Cancel" class="btn btn-raised btn-danger dtp-btn-cancel" />
+                        </div>
 
-        }
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="myTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>MedicineName</th>
-                                <th>CompanyName</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in ViewBag.Medicines)
-                            {
-                                <tr>
-                                    <td>@item.MedicineName</td>
-                                    <td>@item.CompanyName</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Medicine", "Medicine", new { ID = item.MedicineID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
-                                        @Html.ActionLink("Delete", "Delete", "Medicine", new { ID = item.MedicineID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
-                                    </td>
 
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>MedicineName</th>
+                                            <th>CompanyName</th>
+                                            <th>Image</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.Medicines)
+                                        {
+                                        <tr>
+                                            <td>@item.MedicineName</td>
+                                            <td>@item.CompanyName</td>
+                                            <td><img src="~/Content/Images/@item.ImageName" width="100" /> </td>
+                                            <td>
+                                                @Html.ActionLink("Edit", "Medicine", "Medicine", new { ID = item.MedicineID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
+                                                @Html.ActionLink("Delete", "Delete", "Medicine", new { ID = item.MedicineID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
+                                            </td>
+
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-@section script{
+            </div> </div></div></div>
+            @section script{
 
 
-    <script>
+                <script>
 
         $(document).ready(function () {
 
@@ -102,10 +115,10 @@
 
 
 
-    </script>
+                </script>
 
 
 
 
-}
+            }
 

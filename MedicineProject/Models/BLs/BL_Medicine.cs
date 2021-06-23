@@ -15,8 +15,9 @@ namespace MedicineProject.Models.BLs
         {
             SqlParameter[] prm = new SqlParameter[]
             {
-                 new SqlParameter("MedicineName",medicine.MedicineName),
+                new SqlParameter("MedicineName",medicine.MedicineName),
                 new SqlParameter("CompanyID",medicine.CompanyID),
+                new SqlParameter("ImageName",medicine.ImageName),
                 new SqlParameter("ClientID",1),
                 new SqlParameter("type",Actions.Insert)
             };
@@ -29,6 +30,7 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("MedicineID",medicine.MedicineID),
                 new SqlParameter("MedicineName",medicine.MedicineName),
                 new SqlParameter("CompanyID",medicine.CompanyID),
+                new SqlParameter("ImageName",medicine.ImageName),
                 new SqlParameter("ClientID",medicine.ClientID),
                 new SqlParameter("type",Actions.Update)
             };
@@ -57,6 +59,7 @@ namespace MedicineProject.Models.BLs
                 medicine.MedicineID = Convert.ToInt32(dt.Rows[0]["MedicineID"]);
                 medicine.MedicineName = Convert.ToString(dt.Rows[0]["MedicineName"]);
                 medicine.CompanyID = Convert.ToInt32(dt.Rows[0]["CompanyID"]);
+                medicine.ImageName = Convert.ToString(dt.Rows[0]["ImageName"]);
                 medicine.CompanyName = Convert.ToString(dt.Rows[0]["CompanyName"]);
             }
             return medicine;
@@ -77,6 +80,7 @@ namespace MedicineProject.Models.BLs
                 medicine.MedicineName = Convert.ToString(dr["MedicineName"]);
                 medicine.CompanyID = Convert.ToInt32(dr["CompanyID"]);
                 medicine.CompanyName = Convert.ToString(dr["CompanyName"]);
+                medicine.ImageName = Convert.ToString(dr["ImageName"]);
                 medicines.Add(medicine);
             }
             return medicines;
@@ -84,14 +88,16 @@ namespace MedicineProject.Models.BLs
     }
     public class Medicine
     {
-        
-        public int MedicineID { get; set; }
-        [Required(ErrorMessage = "Please enter Medicine name.")]
+
+        public int? MedicineID { get; set; }
+        [Required]
         public string MedicineName { get; set; }
         [Required]
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
         public int IsDelete { get; set; }
         public int ClientID { get; set; }
+        public HttpPostedFileBase UploadFile { get; set; }
+        public string ImageName { get; set; }
     }
 }

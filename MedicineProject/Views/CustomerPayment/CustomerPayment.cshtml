@@ -1,0 +1,201 @@
+﻿@model MedicineProject.Models.BLs.CustomerPayment
+@{
+    ViewBag.Title = "CustomerPayment";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>
+    CustomerPayment
+</h2>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group m-0 pull-right">
+            <ol class="breadcrumb hide-phone p-0 m-0">
+                <li class="breadcrumb-item"><a href="#">Urora</a></li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                <li class="breadcrumb-item active">Form Validation</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <div class="page-title-box">
+                    <h4 class="page-title">Sale To Customer</h4>
+                </div>
+                <div class="general-label">
+                    <table class="table table-active">
+                        <thead>
+                            <tr>
+                                <th>MedicineName</th>
+                                <th>CompanyName</th>
+                                <th>ItemPrice</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.Orders)
+                            {
+                                <tr>
+                                    <td>@item.MedicineName</td>
+                                    <td>@item.CompanyName</td>
+                                    <td>@item.SalePrice.ToString("0.0") </td>
+                                    <td>@item.Quantity</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @using (Html.BeginForm("CustomerPayment", "CustomerPayment", FormMethod.Post))
+                    {
+
+                        <div class="form">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Payment</h4>
+                            </div>
+                            <div class="form-group">
+                                <div class="label bmd-label-floating"><label>Customer Name</label></div>
+                                <div>@Html.DropDownListFor(x => x.CustomerID, ViewBag.Customers as SelectList, new { @class = "form-control" })</div>
+                                <div>@Html.ValidationMessageFor(x => x.CustomerID, "", new { @class = "text text-danger" })</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="bmd-label-floating"><label>Total Amount</label></div>
+                                <div>@Html.TextBoxFor(x => x.TotalAmount, new { @readonly = "readonly", @class = "form-control", @Autocomplete = "off" })</div>
+                                <div>@Html.ValidationMessageFor(x => x.TotalAmount, "", new { @class = "text text-danger" })</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="label bmd-label-floating"><label>Paid Amount</label></div>
+                                <div>@Html.TextBoxFor(x => x.PaidAmount, new { @class = "form-control", @Autocomplete = "off" })</div>
+                                <div>@Html.ValidationMessageFor(x => x.PaidAmount, "", new { @class = "text text-danger" })</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="label bmd-label-floating"><label>Payment Date</label></div>
+                                <div>@Html.TextBoxFor(x => x.PaymentDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", @Autocomplete = "off" })</div>
+                                <div>@Html.ValidationMessageFor(x => x.PaymentDate, "", new { @class = "text text-danger" })</div>
+                            </div>
+                            <div class="form-group form-inline mb-0 row">
+                                @*<div class="bmd-label-floating mb-0"><label>Payment Method</label></div>*@
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(x => x.PaymentMethodID, ViewBag.PaymentMethods as SelectList, "Select Payment Method", new { @class = "form-control w-100", @Autocomplete = "off" })
+                                    <div>@Html.ValidationMessageFor(x => x.PaymentMethodID, "", new { @class = "text text-danger" })</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" style="color:white;font-size:large" id="btnpaymentmethod" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-success btn-raised">+</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="label bmd-label-floating"><label>Method Detail</label></div>
+                                <div>@Html.TextBoxFor(x => x.MethodDetail, new { @class = "form-control", @Autocomplete = "off" })</div>
+                                <div>@Html.ValidationMessageFor(x => x.MethodDetail, "", new { @class = "text text-danger" })</div>
+                            </div>
+                            <div class="form-group">
+                                <div>@Html.HiddenFor(x => x.OrderID, (int)ViewBag.OrderID)</div>
+                                <div>@Html.ValidationMessageFor(x => x.OrderID, "", new { @class = "text text-danger" })</div>
+                            </div>
+                        </div>
+
+
+
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+
+
+                    }
+                
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Paymethod</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        <div class="form-group col-lg-12 col-md-4 w-100">
+                                            <label>PaymentMethod Name</label>
+                                            <input type="text" id="PaymentMethod" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-lg-12 col-md-4 w-100">
+                                            <label>Status</label>
+                                            <select id="opselect" class="form-control">
+                                                <option value="0">Select The Status</option>
+                                                <option value="1">Available</option>
+                                                <option value="2">Not Available</option>
+                                            </select>
+                                        </div>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" id="btncustomersalesubmit" value="Submit" class="btn btn-info btn-raised mb-0" />
+                                    <button type="button" class="btn btn-raised btn-danger ml-2" data-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>OrderID</th>
+                                <th>CustomerName</th>
+                                <th>TotalAmount</th>
+                                <th>PaidAmount</th>
+                                <th>RemainingAmount</th>
+                                <th>PaymentDate</th>
+                                <th>PaymentMethodName</th>
+                                <th>MethodDetail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.CustomerPayments)
+                            {
+                                <tr>
+                                    <td>@item.OrderID</td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>@item.PaidAmount</td>
+                                    <td>@item.RemainingAmount</td>
+                                    <td>@item.PaymentDate.ToString("dd-MMM-yyy")</td>
+                                    <td>@item.PaymentMethodName</td>
+                                    <td>@item.MethodDetail</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function btnclick() {
+        var PaymentMethod = $('#PaymentMethod').val();
+        var Status = $('#opselect option:selected').val();
+            var obj = {
+                PaymentMethodName: PaymentMethod,
+                Status: Status
+            }
+          submit(obj);
+        }
+        function submit(obj) {
+            $.ajax({
+                url: "/CustomerPayment/CreateOrder",
+                method: "POST",
+                data: obj,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    console.log(data);
+                },
+                error: function (err) {
+                    alert(err);
+                }
+
+            })
+        }
+</script>

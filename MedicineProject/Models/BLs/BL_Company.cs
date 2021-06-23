@@ -18,6 +18,8 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("Address",cmp.Address),
                 new SqlParameter("Contact",cmp.Contact),
                 new SqlParameter("ClientID",1),
+                new SqlParameter("Credit",0),
+                new SqlParameter("Debit",0),
                 new SqlParameter("type",Actions.Insert)
             };
             Helper.sp_ExecuteQuery("sp_Company", prm);
@@ -30,7 +32,19 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("CompanyName",cmp.CompanyName),
                 new SqlParameter("Address",cmp.Address),
                 new SqlParameter("Contact",cmp.Contact),
+                new SqlParameter("Credit",cmp.Credit),
+                new SqlParameter("Debit",cmp.Debit),
                 new SqlParameter("type",Actions.Update)
+            };
+            Helper.sp_ExecuteQuery("sp_Company", prm);
+        }
+        public static void UpdateCredit_Debit(int cid,decimal? credit)
+        {
+            SqlParameter[] prm = new SqlParameter[]
+            {
+                new SqlParameter("CompanyID",cid),
+                new SqlParameter("Credit",credit),
+                new SqlParameter("type",Actions.Update_Credit)
             };
             Helper.sp_ExecuteQuery("sp_Company", prm);
         }
@@ -59,15 +73,18 @@ namespace MedicineProject.Models.BLs
                 cmp.Address = Convert.ToString(dt.Rows[0]["Address"]);
                 cmp.Contact = Convert.ToString(dt.Rows[0]["Contact"]);
                 cmp.ClientID = Convert.ToInt32(dt.Rows[0]["ClientID"]);
+                cmp.Credit = Convert.ToDecimal(dt.Rows[0]["Credit"]);
+                cmp.Debit = Convert.ToDecimal(dt.Rows[0]["Debit"]);
             }
             return cmp;
         }
-        public static List<Company> GetCompanies(int ID)
+        public static List<Company> GetCompanies(int ID, int? cid)
         {
             List<Company> cmps = new List<Company>();
             SqlParameter[] prm = new SqlParameter[]
             {
                 new SqlParameter("ClientID",ID),
+                new SqlParameter("CompanyID",cid),
                 new SqlParameter("type",Actions.Select)
             };
             DataTable dt = Helper.sp_Execute_Table("sp_Company", prm);
@@ -79,6 +96,8 @@ namespace MedicineProject.Models.BLs
                 cmp.Address = Convert.ToString(dr["Address"]);
                 cmp.Contact = Convert.ToString(dr["Contact"]);
                 cmp.ClientID = Convert.ToInt32(dr["ClientID"]);
+                cmp.Credit = Convert.ToDecimal(dr["Credit"]);
+                cmp.Debit = Convert.ToDecimal(dr["Debit"]);
                 cmps.Add(cmp);
             }
             return cmps;
@@ -92,6 +111,8 @@ namespace MedicineProject.Models.BLs
         public string Address { get; set; }
         public string Contact { get; set; }
         public int ClientID { get; set; }
+        public decimal Credit { get; set; }
+        public decimal Debit { get; set; }
         public int IsDelete { get; set; }
     }
 }

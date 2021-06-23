@@ -1,156 +1,437 @@
-﻿@model MedicineProject.Models.BLs.Purchase
+﻿@model MedicineProject.Models.BLs.ViewModel
 @{
     ViewBag.Title = "Purchase";
     Layout = "~/Views/Shared/Master.cshtml";
 }
-
-<h2>Purchase</h2>
-<div class="card-body">
-    <h4 class="mt-0 header-title">Purchase Registory</h4>
-    <p class="text-muted font-14">Please Enter the Valid Information...@*</code>*@.</p>
-    <div class="general-label">
-        @*<form class="mb-0">*@
-
-        @using (Html.BeginForm("Save", "Purchase", FormMethod.Post))
-        {
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating">Employee Name</label>
-                @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "--Select the Company--", new { @class = "form-control" })
-
-                <span class="bmd-help">Enter valid Name..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Medicine Name</label>
-                @Html.DropDownListFor(x => x.MedicineID, ViewBag.Medicines as SelectList, "--Select the Medcines--", new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Address..</span>
-            </div>
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Quantity</label>
-                @Html.TextBoxFor(x => x.Quantity, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Contact..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Item Price</label>
-                @Html.TextBoxFor(x => x.ItemPrice, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Contact..</span>
-            </div>
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating ">Date Of Manufacturing</label>
-                <h6 class="text-muted mt-3"></h6>
-                @*<input type="date" id="DOF" class="form-control" />*@
-                @Html.TextBoxFor(x => x.DateOfManufacturing, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
-                <span class="bmd-help">Enter valid Date..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Date Of Expiry</label>
-                <h6 class="text-muted mt-3"></h6>
-                @Html.TextBoxFor(x => x.DateOfExpiry, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
-                <span class="bmd-help">Enter valid Date..</span>
-                @*<input type="date" id="DOR" class="form-control" />*@
-            </div>
-            @Html.HiddenFor(x => x.PurchaseID)
-            <br />
-            <br />
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary  btn-raised mb-0">Submit</button>
-                <button type="button" class="btn btn-raised btn-danger  mb-0">Cancel</button>
-            </div>
-
+<head>
+    <style>
+        .size1 {
+            color: Red;
+            font-size: 22px;
         }
 
+        .size {
+            color: blue;
+            font-size: 22px;
+        }
+
+        .modal {
+            text-align: center;
+        }
+
+        .modal-dialog {
+            position: relative;
+            display: table; /* <-- This makes the trick */
+            overflow-y: auto;
+            overflow-x: auto;
+            width: auto;
+            min-width: 600px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Stock Purchasing</h4>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h4 class="mt-0 header-title">Stock Orders</h4>
+                <p class="text-muted font-14">Please Enter the Valid Information...</p>
+                <div class="general-label">
+                    @using (Html.BeginForm("CreateOrder", "Purchase", FormMethod.Post))
+                    {
+                        <div class="form-inline mb-0 align-items-center">
+                            <div class="form-group col-md-3">
+                                @*<label >Order Date</label>*@
+                                @Html.TextBoxFor(x => x.Purchase_Order.OrderID, new
+                                {
+                                    @placeholder = "OrderID",
+                                    @class = "form-control" + ""
+                                })
+                            </div>
+                            <div class="form-group col-md-3">
+                                @Html.TextBoxFor(x => x.Invoice.OrderDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Invoice.OrderDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="">
+                                <button type="submit" class="btn btn-success btn-raised mb-0" id="btncreateorder">Create Order</button>
+                                @Html.ActionLink("Cancel", "Clear", "Purchase", null, new { @class = "btn btn-danger btn-raised mb-0" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="f">
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+
+                    @using (Html.BeginForm("Purchase", "Purchase", FormMethod.Post))
+                    {
+                    <div class="form-inline mb-0 row">
+                        <div class="form-group col-xl-1 col-sm-12">
+                            @*<label>Company Name</label>*@
+                            @Html.DropDownListFor(x => x.purchase.CompanyID, ViewBag.Companies as SelectList, "--Select the Company--", new { @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.CompanyID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-2 col-sm-12">
+                            @*<label >Medicine Name</label>*@
+                            @Html.DropDownListFor(x => x.purchase.MedicineID, ViewBag.Medicines as SelectList, "--Select the Medcines--", new { @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.MedicineID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-1 col-sm-12">
+                            @*<label for="Quantity" class="bmd-label-static">Quantity</label>*@
+                            @Html.TextBoxFor(x => x.purchase.Quantity, new { placeholder = "Quantity", @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.Quantity, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-2 col-sm-12">
+                            @*<label for="ItemPrice" class="bmd-label-static">Item Price</label>*@
+                            @Html.TextBoxFor(x => x.purchase.PurchasePrice, new { placeholder = "Purchase Price", @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.PurchasePrice, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-2 col-sm-12">
+                            @*<label for="ItemPrice" class="bmd-label-static">Item Price</label>*@
+                            @Html.TextBoxFor(x => x.purchase.SalePrice, new { placeholder = "Sale Price", @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.SalePrice, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-2 col-sm-12">
+                            <label>Date Of Mfg</label>
+                            @*<label >Date Of Mfg</label>*@
+                            @Html.TextBoxFor(x => x.purchase.DateOfManufacturing, "{0:yyyy-MM-dd}", new { type = "date", placeholder = "Date of Mang", @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.DateOfManufacturing, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-xl-2 col-sm-12">
+                            <label>Date Of Expiry</label>
+                            <h6 class="text-muted mt-3"></h6>
+                            @Html.TextBoxFor(x => x.purchase.DateOfExpiry, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control w-100" })
+                            @Html.ValidationMessageFor(x => x.purchase.DateOfExpiry, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-xl-1 col-sm-12">
+                            <button type="submit" class="btn btn-primary  btn-raised mb-0">Purchase</button>
+                        </div>
+                    </div>
+                        @Html.HiddenFor(x => x.purchase.OrderID)
+                        @Html.HiddenFor(x => x.purchase.PurchaseID)
+                    }
 
 
-        <div class="panel panel-default">
-            <div class="panel-body">
+                    <div class="display nowrap" style="overflow:scroll">
+                        <table class="table table-bordered" id="texample" style="overflow:scroll">
+
+
+                            @if (TempData["cart"] == null)
+                            {
+                                <caption class="text-center">There is no Product for Purchasing</caption>
+                            }
+                            else
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>Medicine Name</th>
+                                        <th>CompanyName</th>
+                                        <th>Quantity</th>
+                                        @*<th>SoldPrice</th>*@
+                                        <th>Purchase_Price</th>
+                                        <th>SalePrice</th>
+                                        <th>DateOfManufacturing</th>
+                                        <th>DateOfExpiry</th>
+                                        <th>Total Amount</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int i = 0;}
+
+                                    @foreach (var item in TempData["cart"] as List<MedicineProject.Models.BLs.Purchase>)
+                                    {
+                                    <tr>
+                                        <td>@item.MedicineName</td>
+                                        <td>@item.CompanyName</td>
+                                        <td>@item.Quantity</td>
+                                        @*<td>@item.SoldQuantity</td>*@
+                                        <td>@item.PurchasePrice.ToString("0.0")</td>
+                                        <td>@item.SalePrice.ToString("0.0")</td>
+                                        <td>@item.DateOfManufacturing.ToString("dd-MM-yyy")</td>
+                                        <td>@item.DateOfExpiry.ToString("dd-MM-yyy")</td>
+                                        <td>
+                                            @(
+                                                (item.Quantity * item.PurchasePrice).ToString("0.0")
+                                            )
+                                        </td>
+
+                                        <td>
+                                            @Html.ActionLink(" ", "Delete", "Purchase", new { id = @i }, new { @class = "mdi mdi-close", @style = "color:red" })
+                                        </td>
+                                    </tr>
+
+                                        i++;
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+
+                    <br />
+                    <br />
+                    <div class="text-right"><span class="btn btn-primary">Grand Total= @TempData["Total"]</span></div>
+                    @{ List<MedicineProject.Models.BLs.Purchase> ps = new List<MedicineProject.Models.BLs.Purchase>();
+                        if (TempData["cart"] == null)
+                        {
+
+                        }
+                        else
+                        {
+                            ps = TempData["cart"] as List<MedicineProject.Models.BLs.Purchase>;
+                        }
+
+                        if (ps.Count > 0)
+                        {
+                            <div class="text-center center">
+                                @Html.ActionLink("Done", "Purchase_Invoice", "Purchase", null, new { @class = "btn btn-success btn-raised mb-0" })
+                                @Html.ActionLink("Cancel", "Clear", "Purchase", null, new { @class = "btn btn-danger btn-raised mb-0" })
+                            </div>
+                        }
+                    }
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
                 <div class="table-responsive">
                     <table id="myTable" class="table table-striped table-bordered">
+
                         <thead>
-                            <tr>
-                                <th>Medicine Name</th>
-                                <th>CompanyName</th>
-                                <th>Quantity</th>
-                                <th>ItemPrice</th>
-                                <th>DateOfManufacturing</th>
-                                <th>DateOfExpiry</th>
+                            <tr class="">
+                                <th>InvoiceID </th>
+                                <th>OrderID</th>
+                                <th>Company Name</th>
+                                <th>TotalAmount</th>
+                                <th>OrderDate</th>
+                                <th>IsPaid</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in ViewBag.Purchases)
+                            @foreach (var item in ViewBag.invoice)
                             {
                                 <tr>
-                                    <td>@item.MedicineName</td>
-                                    <td>@item.CompanyName</td>
-                                    <td>@item.Quantity</td>
-                                    <td>@item.ItemPrice</td>
-                                    <td>@item.DateOfManufacturing</td>
-                                    <td>@item.DateOfExpiry</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Purchase", "Purchase", new { ID = item.PurchaseID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
-                                        @Html.ActionLink("Delete", "Delete", "Purchase", new { ID = item.PurchaseID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
-                                    </td>
 
+                                    <td>@item.InvoiceID</td>
+                                    <td>@item.OrderID</td>
+                                    <td>@item.CompanyName</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>@item.OrderDate.ToString("dd-MM-yyy")</td>
+                                    <td>
+                                        @if (item.IsPaid == 0)
+                                        {
+                                            <span class="badge badge-info">Still not Paid</span>
+
+                                        }
+                                        else if (item.IsPaid == 1)
+                                        {
+                                            <span class="badge badge-success">Paid</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-primary">Remaining</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        
+                                        @Html.ActionLink("Details", "All_Purchases", "Purchase", new { orderid = @item.OrderID, invoiceid = @item.InvoiceID, cid = @item.CompanyID }, new { @class = "mdi mdi-file-document size1 btn btn-default", title = "Details" }) &nbsp;&nbsp;
+                                        @Html.ActionLink(" ", "Index", "Test", new { orderid = @item.OrderID, invoiceid = @item.InvoiceID, cid = @item.CompanyID }, new { @class = "mdi mdi-file-document size1 btn btn-default", title = "Details" }) &nbsp;&nbsp;
+                                        <button class ="size1 mdi mdi-details btn btn-default anchorDetail" data-id="@item.OrderID"  title = "Products"> </button>
+                                        @if (@item.IsPaid == 1)
+                                        {
+
+                                            @Html.ActionLink(" ", "CompanyPayment", "CompanyPayment", new { id = "0", InvoiceId = @item.InvoiceID, cid = @item.CompanyID, ispaid = @item.IsPaid }, new { @class = "fa fa-paypal size btn btn-default disabled", title = "Paid" })
+
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(" ", "CompanyPayment", "CompanyPayment", new { id = "0", InvoiceId = @item.InvoiceID, cid = @item.CompanyID }, new { @class = "fa fa-paypal size btn btn-default", title = "Payment" })
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
 
-
-
-        @*</form>*@
     </div>
 </div>
+<div class="row">
+    <div class="col-md-6 col-xl-4 ml-auto col-sm-auto">
+        <div class="card bg-white m-b-30">
+            <div class="">
+                <div class="modal fade bd-example-modal-form" tabindex="-1" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalform">Purchase Record</h5>
+                                <button type="button" class="close btncls" id="clse" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body table-responsive" id="myModalContent">
+                               <div><input class="form-control" id="myInput" autocomplete="off" type="text" placeholder="Search.."></div> 
+                                <table id="popuptable" class="table table-bordered table-striped" cellspacing="0" width="100%">
 
+                                    <thead>
+                                        <tr>
+                                            <th>OrderID</th>
+                                            <th>MedicineName</th>
+                                            <th>CompanyName</th>
+                                            <th>Quantity</th>
+                                            <th>ItemPrice</th>
+                                            <th>DateOfManufacturing</th>
+                                            <th>DateOfExpiry</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="body">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-raised btn-danger btncls" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section script{
 
 
     <script>
+        function enable_disable_order_btn() {
+            var ordid = $('#Purchase_Order_OrderID').val();
+            if (ordid == 0 || ordid == null) {
 
+                $('#btncreateorder').removeAttr('disabled', true);
+                $('#f').hide();
+            }
+            else {
+
+                $('#btncreateorder').attr('disabled', 'disabled');
+                var oid = $('#Purchase_Order_OrderID').val();
+                $('#purchase_OrderID').val(oid);
+            }
+        };
+        $(document).ready(function () {
+         enable_disable_order_btn();
+        });
+        @*$(document).ready(function () {
+
+                if (@Html.Raw(TempData["bit"])== 1) {
+                    Mm("Insert");
+                }
+                else if (@Html.Raw(TempData["bit"])== 2) {
+                    Mm("Update");
+                }
+                else if (@Html.Raw(TempData["bit"])== 3) {
+                    Mm("Delete");
+                }
+
+            });*@
+
+
+
+        //function Mm(pm)
+        //{
+        //    if(pm=="Insert")
+        //    {
+        //        toastr.success("Add Data sucessfully");
+        //    }
+        //    else if(pm=="Update")
+        //    {
+        //        toastr.success("updated Data sucessfully");
+        //    }
+        //    else if(pm=="Delete")
+        //    {
+        //        toastr.success("Deleted Data sucessfully");
+        //    }
+        //}
+    </script>
+    <script>
+        var TeamDetailPostBackURL = '/Purchase/Details';
         $(document).ready(function () {
 
+            $('#myTable').on('click', '.anchorDetail', function () {
+                //debugger;
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        //debugger;
+                        var dt = '';
+                        $.each(JSON.parse(data), function (index, element) {
+                            dt += '<tr><td>' + element.OrderID + '</td>';
+                            dt += '<td>' + element.MedicineName + '</td>';
+                            dt += '<td>' + element.CompanyName + '</td>';
+                            dt += '<td>' + element.Quantity + '</td>';
+                            dt += '<td>' + element.SalePrice + '</td>';
+                            dt += '<td>' + element.DateOfManufacturing + '</td>';
+                            dt += '<td>' + element.DateOfExpiry + '</td>';
+                            dt += '</tr>';
+                        });
+                        $('.body').html(dt);
+                        $('#exampleModalCenter').modal(options);
+                        $('#exampleModalCenter').modal('show');
+                        console.log(data);
+                        ////Html.RenderPartial("_Details");
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                        //console.log(data);
+                    }
+                });
+            });
+            //$("#closebtn").on('click',function(){
+            //    $('#myModal').modal('hide');
 
-            if(@Html.Raw(TempData["bit"])==1)
-            {
-                Mm("Insert");
-            }
-            else if(@Html.Raw(TempData["bit"])==2)
-            {
-                Mm("Update");
-            }
-            else if(@Html.Raw(TempData["bit"])==3)
-            {
-                Mm("Delete");
-            }
-
-        })
-
-
-
-        function Mm(pm)
-        {
-            if(pm=="Insert")
-            {
-                toastr.success("Add Data sucessfully");
-            }
-            else if(pm=="Update")
-            {
-                toastr.success("updated Data sucessfully");
-            }
-            else if(pm=="Delete")
-            {
-                toastr.success("Deleted Data sucessfully");
-            }
-        }
+            $(".btncls").click(function () {
+                $('.body').html('');
+                //data[];
+                dt = '';
+                $('#myInput').val(dt);
+                $('#myInput').attr("value", "");
+                $('#exampleModalCenter').modal('hide');
+            });
+        });
+         $("#myInput").on("keyup", function() {
+             var value = $(this).val().toLowerCase();
+         $("#popuptable tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+  });
     </script>
-
-
-
 
 }

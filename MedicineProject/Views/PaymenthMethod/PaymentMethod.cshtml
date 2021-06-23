@@ -1,0 +1,85 @@
+﻿@model MedicineProject.Models.BLs.PayMethods
+@{
+    ViewBag.Title = "PaymentMethod";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>PaymentMethod</h2>
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h4 class="mt-0 header-title">Method Registory</h4>
+                <p class="text-muted font-14">Please Enter the Valid Information...@*</code>*@.</p>
+                <div class="general-label">
+                    @*<form class="mb-0">*@
+
+                    @using (Html.BeginForm("PaymentMethod", "PaymenthMethod", FormMethod.Post))
+                    {
+                        <div class="form-group bmd-form-group">
+                            <label for="exampleInputEmail1" class="bmd-label-floating">PaymentMethod Name</label>
+                            @Html.TextBoxFor(x => x.PaymentMethodName, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group bmd-form-group">
+                            <label for="exampleInputPassword1" class="bmd-label-floating">Status</label>
+                            @Html.DropDownListFor(x=>x.Status,new List<SelectListItem> { new SelectListItem {Text="Select the Status",Value="0" },
+                       new SelectListItem {Text="Available",Value="1" },
+                       new SelectListItem {Text="Not Available",Value="2" },}, new { @class = "form-control" })
+                     
+                        </div>
+                        @Html.HiddenFor(x => x.PaymentMethodID)
+                        <br />
+                        <br />
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary  btn-raised mb-0">Submit</button>
+                            <button type="button" class="btn btn-raised btn-danger  mb-0">Cancel</button>
+                        </div>
+
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>PaymentMethod Name</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.PayMethods)
+                                        {
+                                            <tr>
+                                                <td>@item.PaymentMethodName</td>
+                                                <td>@if (@item.Status==1)
+                                                {
+                                                    <p class="badge badge-success">Available</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="badge badge-danger">Not Available</p>
+                                                }</td>
+                                                <td>
+                                                    @Html.ActionLink("Edit", "PaymentMethod", "PaymenthMethod", new { ID = item.PaymentMethodID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
+                                                    @Html.ActionLink("Delete", "Delete", "PaymenthMethod", new { ID = item.PaymentMethodID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

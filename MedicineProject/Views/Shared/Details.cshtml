@@ -1,0 +1,66 @@
+﻿@model MedicineProject.Models.BLs.Purchase
+
+
+@if (Session["orderslist"] != null)
+{
+    int i = 0;
+
+    foreach (var item in Session["orderslist"] as List<MedicineProject.Models.BLs.SaleItems>)
+    {
+    <tr>
+        <td>@item.MedicineName</td>
+        <td>@item.CompanyName</td>
+        <td>@item.SalePrice.ToString("0.0") </td>
+        <td>
+            <input type="number" data-id="@item.MedicineID" min="1" max="@(item.AvailableStock<=2147483647 ? @item.AvailableStock : 2147483647)" required="" value="@item.Quantity" placeholder="" class="quantity" id="txtquantity" />
+            @*@item.Quantity.ToString("0.0")*@
+        </td>
+        <td>
+            @(
+                (item.Quantity * item.SalePrice).ToString("0.0")
+            )
+        </td>
+        
+        <td>
+            @*@Html.ActionLink(" ", "Delete", "CustomerOrders", new { id = @i }, new { @class = "mdi mdi-close", @style = "color:red" })*@
+            <button class="btn mdi mdi-delete-forever" onclick="Delete(@i)" style="color:red; font-size:xx-large"></button>
+        </td>
+    </tr>
+        i++;
+    }
+}
+@*else
+{
+    <tr><td>No Items</td></tr>
+}*@
+<script>
+    //UpdateTotal();
+    var Quantity, MedicineID;
+    $('.quantity').change(function () {
+
+        Quantity = $(this).val();
+        MedicineID = $(this).attr('data-id');
+        changeQ(MedicineID, Quantity);
+    });
+    function changeQ(MedicineID, Quantity) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/CustomerOrders/Increase_Decrease_Quantity?MedicineID=' + MedicineID + '&Quantity=' + Quantity,
+            datatype: 'json',
+            success: function (data) {
+                console.log(data);
+                var totall = 0;
+                var quu = 0;
+                $.each(data, function (index, element) {
+                    totall += (element.Quantity * element.SalePrice);
+                    quu += (element.Quantity);
+                });
+                $('#txtqu').val(quu);
+                $('#txttotal').val(totall);
+            }
+        });
+        //UpdateTotal();
+    }
+</script>
+

@@ -11,7 +11,7 @@ namespace MedicineProject.Controllers
     {
         public ActionResult Company(int? ID)
         {
-            ViewBag.companies = BL_Company.GetCompanies(Convert.ToInt32(1));
+            ViewBag.companies = BL_Company.GetCompanies(Convert.ToInt32(1),null);
             if (ID > 0)
             {
                 Company cmp = BL_Company.GetCompany(Convert.ToInt32(ID));

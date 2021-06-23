@@ -1,0 +1,168 @@
+﻿@model MedicineProject.Models.BLs.Order
+@{
+    ViewBag.Title = "CustomerOrders";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="page-title-box">
+            <h4 class="page-title"></h4>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h4 class="mt-0 header-title">Customer Orders</h4>
+                <p class="text-muted font-14"></p>
+                <div class="general-label">
+                    <table class="table" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Medicine Name</th>
+                                <th>CompanyName</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ttbody">
+                            @Html.Partial("Details")
+                        </tbody>
+                    </table>
+                    <div class="form-control form-inline">Total Bill :<div class="col-md-2"><input type="text" class="form-control" readonly="readonly" id="txttotal" /></div></div>
+                    <br />
+                    <button type="button" class="btn btn-danger btn-raised mb-0 center text-center" onclick="Delete()">Cancel</button>
+                    <!-- Modal Area -->
+                    <!-- Button trigger modal -->
+
+                    <button type="button" id="btnconfirmation" class="btn btn-raised btn-primary mb-0 center text-center" data-toggle="modal" data-target="#exampleModalCenter">
+                        Confirmation
+                    </button>
+                    <!-- Modal -->
+                   
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        @using (Html.BeginForm("CustomerSale", "CustomerSale", FormMethod.Post))
+                        {
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Confirmaiton Alert</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+
+                                            <div class="form-group col-lg-12 col-md-4 w-100">
+                                                <label>Customer Name</label>
+                                                @Html.DropDownListFor(x => x.CustomerID, ViewBag.Customers as SelectList, "Select the Customer", new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group col-lg-12 col-md-4 w-100">
+                                                <label>Total Amount</label>
+                                                <input type="number" id="txttotalAmount" name="TotalAmount" class="form-control " placeholder="Total Amount" />
+                                            </div>
+                                            <div class="form-group col-lg-12 col-md-4 w-100">
+                                                <label>Quantity</label>
+                                                <input type="number" id="txtquan" name="Quantity" class="form-control " placeholder="Quantity" />
+                                            </div>
+                                            <div class="form-group col-lg-12 col-md-4 w-100">
+                                                <label>Order Date</label>
+                                                <input type="date" id="orderdate" name="SaleDate" class="form-control " placeholder="OrderDate" />
+                                            </div>
+                                            <div class="form-group col-lg-12 col-md-4 w-100">
+                                                <label>Order by</label>
+                                                @Html.DropDownListFor(x => x.EmployeeID, ViewBag.Employee as SelectList, "Select the Employee", new { @class = "form-control" })
+                                            </div>
+
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        @*<button type="button" class="btn btn-raised btn-primary">Save changes</button>*@
+                                        @*@Html.ActionLink("CheckOut", "CustomerPayment", "CustomerPayment", new { id = Session["COrdersTotal"] }, new { @class = "btn btn-success btn-raised mb-0" })*@
+                                        <input type="submit" id="btncustomersalesubmit" value="Submit" class="btn btn-info btn-raised mb-0" />
+                                        <button type="button" class="btn btn-raised btn-danger ml-2" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                </div>
+                            </div>}
+                    </div>
+                    <input type="number" hidden="hidden" id="txtqu" value="0" />
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function UpdateTotal() {
+        $.ajax({
+            type: 'Get',
+            url: '/CustomerOrders/Total',
+            datatype: 'json',
+            success: function (data) {
+                var Quantity = 0;
+                $.each((data.List), function (index, element) {
+                    Quantity += (element.Quantity);
+                });
+                $('#txttotal').val(data.Total);
+                $('#txtqu').val(Quantity);
+                if ($('#txttotal').val(data.Total) == 0) {
+                    $('#btnconfirmation').hide();
+                }
+            }
+        });
+    }
+    function Delete(data) {
+
+        $.ajax({
+            type: 'Get',
+            url: '/CustomerOrders/Delete?ID=' + data,
+            datatype: 'html',
+            success: function (data) {
+
+                var tota = 0;
+                var Qu = 0;
+                $.each(data.list, function (index, element) {
+                    tota += (element.Quantity * element.ItemPrice);
+                    Qu += element.Quantity;
+                });
+                 $('#txtqu').val(Qu);
+                if (tota == 0) {
+                    window.location.href = data.redirecturl;
+                }
+                 $('#ttbody').load("/CustomerOrders/refresh");
+                $('#txttotal').val(tota);
+
+            }
+        });
+    }
+    //function Delete() {
+
+    //    //$.ajax({
+    //    //    type: 'Get',
+    //    //    url: '/CustomerOrders/Delete',
+    //    //    datatype: 'HTML',
+    //    //    success: function (data) {
+    //    //        $('tbody').load("/CustomerOrders/ShowTotal");
+    //    //    }
+    //    //});
+    //    UpdateTotal();
+    //}
+    $(document).ready(function () {
+
+        UpdateTotal();
+        $('#btnconfirmation').click(function () {
+            var t = $('#txttotal').val();
+            $('#txttotalAmount').val(t);
+           var q= $('#txtqu').val();
+            $('#txtquan').val(q);
+       
+            //UpdateTotal();
+        });
+    });
+</script> 

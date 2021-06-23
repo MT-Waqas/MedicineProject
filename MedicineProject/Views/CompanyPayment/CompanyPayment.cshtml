@@ -3,125 +3,271 @@
     ViewBag.Title = "CompanyPayment";
     Layout = "~/Views/Shared/Master.cshtml";
 }
-
-
-<div class="card-body">
-    <h4 class="mt-0 header-title">Company Payment</h4>
-    <p class="text-muted font-14">Please Enter the Valid Information...@*</code>*@.</p>
-    <div class="general-label">
-        @*<form class="mb-0">*@
-
-        @using (Html.BeginForm("Save", "CompanyPayment", FormMethod.Post))
-        {
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating ">Company Name</label>
-                @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "---Select the Company", new { @class = "form-control" })
-
-                <span class="bmd-help">Enter valid Name..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Total Amount</label>
-                @Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Total Amount..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Paid Amount</label>
-                @Html.TextBoxFor(x => x.PaidAmount, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Paid Amount..</span>
-            </div>
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating ">Remaining Amount</label>
-                @*<input type="date" id="datetime" class="form-control" />*@
-                @Html.TextBoxFor(x => x.RemainingAmount, new { @class = "form-control" })
-
-                <span class="bmd-help">Enter valid Remaining Amount..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-
-                <label for="exampleInputPassword1" class="bmd-label-floating">Payment Date</label>
-                <h6 class="text-muted mt-3"></h6>
-                @*@Html.HiddenFor(x => x.PaymentDate, new { @class = "form-control", id = "sdate" })*@
-                @Html.TextBoxFor(x => x.PaymentDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
-                @*<input type="date" id="pdate" class="form-control" />*@
-                @*<input type="text" id="tttdate"  class="form-control" />*@
-                @*<%= Html.EditorFor(x=>x.PaymentDate)%>*@
-                <span class="bmd-help">Enter valid Payment Date..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">Bank Name</label>
-                @Html.TextBoxFor(x => x.BankName, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid Bank Name..</span>
-            </div>
-
-            <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">ReceiptNumber</label>
-                @Html.TextBoxFor(x => x.ReceiptNumber, new { @class = "form-control" })
-                <span class="bmd-help">Enter valid ReceiptNumber..</span>
-            </div>
-            @Html.HiddenFor(x => x.CompanyPaymentID)
-            <br />
-            <br />
-            <input type="text" id="1id" />
-            <input type="text" id="2id" />
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary  btn-raised mb-0">Submit</button>
-                <input class="btn btn-raised btn-danger  mb-0" value="Cancel" />
-            </div>
-
+<head>
+    <style>
+        .form {
+            margin: 0 auto;
+            width: auto;
         }
 
+            .form label {
+                display: inline-block;
+                text-align: right;
+                float: left;
+            }
+
+            .form input {
+                display: inline-block;
+                text-align: left;
+                float: right;
+            }
+    </style>
+
+</head>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group m-0 pull-right">
+            <ol class="breadcrumb hide-phone p-0 m-0">
+                <li class="breadcrumb-item"><a href="#">Urora</a></li>
+                <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                <li class="breadcrumb-item active">Form Validation</li>
+            </ol>
+        </div>
+        <div class="page-title-box">
+            <h4 class="page-title">Stock Payment</h4>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h3 class="">
+                    @{
+                        var obj = Session["InvoiceDetail"] as MedicineProject.Models.BLs.Invoice;
+                        var i_id = Convert.ToInt32(Session["InvoiceID"]);
+                        var tamount = obj.TotalAmount;
+                        var credit = Session["Credit"].ToString();
+                        <p style="color:blue;font-weight:500">@obj.CompanyName   <span style="color:lightgreen" class="fa fa-arrow-right"></span> Payment</p>
+                        <p style="color:mediumblue;font-weight:400" class="">Invoice # : @i_id.ToString()</p>
+                        <p style="color:black;font-weight:400">Credit : @credit</p> 
+                    }
+                </h3>
+                <p class="text-muted font-14">Please Enter the Valid Information...</p>
+
+                <div class="general-label">
+                    @*<form class="mb-0">*@
+
+                    @using (Html.BeginForm("CompanyPayment", "CompanyPayment", FormMethod.Post))
+                    {
+                        <div class="row ">
+                            <div class="col-md-6 card card-block ">
+                                <div class="row">
+
+                                    <div class="form-group form col-md-10">
+                                        @Html.DropDownListFor(x => x.CompanyID, ViewBag.Companies as SelectList, "---Select the Company", new { @class = "form-control w-100" })
+                                        @Html.ValidationMessageFor(x => x.CompanyID, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="form-group form col-10">
+                                        <label for="exampleInputPassword1" id="lbltotalamount" class="bmd-label-floating">Total Amount</label>
+                                        @Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.TotalAmount, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="form-group form col-10">
+                                        <label for="exampleInputPassword1" class="bmd-label-floating">Paid Amount</label>
+                                        @Html.TextBoxFor(x => x.PaidAmount, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.PaidAmount, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group form col-10">
+                                        <label for="exampleInputPassword1" class="bmd-label-floating">Payment Date</label>
+                                        <h6 class="text-muted mt-3"></h6>
+                                        @*@Html.HiddenFor(x => x.PaymentDate, new { @class = "form-control", id = "sdate" })*@
+                                        @Html.TextBoxFor(x => x.PaymentDate, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+                                      @Html.ValidationMessageFor(x => x.PaymentDate, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form">
+                                        <br /><br />
+                                        <div class="form-inline">
+                                            <label class="radio-inline mr-2">
+                                                @Html.RadioButtonFor(x => x.PaymentMethod, "Bank", new { @class = "radio radio-inline", id = "inlineRadio1" }) Bank
+                                            </label>
+                                            <label class="radio-inline mr-2">
+                                                @Html.RadioButtonFor(x => x.PaymentMethod, "Receipt", new { @class = "radio radio-inline", id = "inlineRadio2" }) Receipt
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form col-10" id="b">
+                                        <label for="exampleInputPassword1" class="bmd-label-floating" id="txt"></label>
+                                        @Html.TextBoxFor(x => x.ReceiptNumber_or_BankName, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(x => x.ReceiptNumber_or_BankName, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    @Html.HiddenFor(x => x.CompanyPaymentID)
+                                    @Html.HiddenFor(x => x.InvoiceID, new { @value = @i_id })
+                                    <br />
+                                    <br /><br />
+                                    <br />
+                                </div>
+                                <div class="center text-center">
+                                    <button type="submit" class="btn btn-primary  btn-raised mb-0">Submit</button>
+                                    @Html.ActionLink("Cancel", "CompanyPayment", "CompanyPayment", null, htmlAttributes: new { @class = "btn btn-danger btn-raised mb-0" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="">
+                                    <table class="table">
+                                        <thead style="color:black; font-weight:bolder">
+                                            @{
+                                                <tr><th class="center text-center">Purchase Summary</th></tr>
+                                                <tr><th>InvoiceID :@obj.InvoiceID <br /></th></tr>
+
+                                                <tr><th>OrderID :  @obj.OrderID <br /></th> </tr>
+                                                <tr><th>Company Name :  @obj.CompanyName <br /></th> </tr>
+
+                                                <tr><th>Total Amount : @obj.TotalAmount <br /></th></tr>
+                                                <tr>
+                                                    <th>
+                                                        @if (@obj.RemainingAmount > 0)
+                                                        {
+
+                                                            <p>Dues on Us : @obj.RemainingAmount</p>
+                                                        }
+                                                        else if (@obj.RemainingAmount < 0)
+                                                        {
+                                                               
+                                                    <p class="badge badge-success" style="font-size:large">Amount : Paid</p>
+                                                        }
+                                                        @*else
+                                                        {
+                                                       <p> Dues on Company :  @obj.RemainingAmount</p>
+                                                        }*@
+                                                    </th>
+                                                </tr>
+
+                                                <tr><th>Order Date : @obj.OrderDate</th></tr>
+                                            }
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="myTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Company Name</th>
-                                <th>TotalAmount</th>
-                                <th>PaidAmount</th>
-                                <th>RemainingAmount</th>
-                                <th>PaymentDate</th>
-                                <th>BankName</th>
-                                <th>ReceiptNumber</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in ViewBag.CompaniesPayments)
-                            {
-                                <tr>
-                                    <td>@item.CompanyName</td>
-                                    <td>@item.TotalAmount</td>
-                                    <td>@item.PaidAmount</td>
-                                    <td>@item.RemainingAmount</td>
-                                    <td>@item.PaymentDate</td>
-                                    <td>@item.BankName</td>
-                                    <td>@item.ReceiptNumber</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "CompanyPayment", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
-                                        @Html.ActionLink("Delete", "Delete", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
-                                    </td>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>InvoiceID</th>
+                                            <th>Company Name</th>
+                                            <th>TotalAmount</th>
+                                            <th>PaidAmount</th>
+                                            <th>Debit/Remaining</th>
+                                            <th>Surplus</th>
+                                            <th>PaymentDate</th>
+                                            <th>BankName</th>
+                                            <th>ReceiptNumber/Bank Name</th>
+                                            <th>View Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.CompaniesPayments)
+                                        {
+                                        <tr>
+                                            <td>@item.InvoiceID</td>
+                                            <td>@item.CompanyName</td>
+                                            <td>@item.TotalAmount</td>
+                                            @if (@item.TotalAmount <= @item.PaidAmount)
+                                            {
+                                                <td style="background-color:lightblue">@item.PaidAmount</td>
+                                            }
+                                            else
+                                            {
+                                        <td>@item.PaidAmount</td>
+                                            }
+                                            <td>
+                                                @if (@item.RemainingAmount > 0)
+                                                {
+                                                    <p>@item.RemainingAmount</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>0</p>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@item.RemainingAmount <= 0)
+                                                {
+                                                    <p>@Math.Abs(@item.RemainingAmount)</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>0</p>
+                                                }
+                                            </td>
 
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                            <td>@item.PaymentDate.ToString("YYY-MM-DD")</td>
+                                            <td>@item.PaymentMethod</td>
+                                            <td>@item.ReceiptNumber_or_BankName</td>
+                                            <td>
+                                                @Html.ActionLink("Edit", "CompanyPayment", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-edit", @style = "color:blue" })
+                                                @Html.ActionLink("Delete", "Delete", "CompanyPayment", new { ID = item.CompanyPaymentID }, new { @class = "glyphicon glyphicon-trash", @style = "color:red" })
+                                            </td>
+
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @*</form>*@
                 </div>
             </div>
-
         </div>
-
-        @*</form>*@
     </div>
 </div>
 @section script{
+    <script>
 
+        $(document).ready(function () {
+            var RemainingAmount=@obj.RemainingAmount;
+            var tamount =@obj.TotalAmount;
+            $('#lbltotalamount').addClass('bmd-label-floating');
+            $('#lbltotalamount').addClass('bmd-label-static');
+            if (RemainingAmount<=0)
+            {
+                $('#TotalAmount').val(tamount);
+            }
+            else
+            {
+                $('#TotalAmount').val(RemainingAmount);
+            }
+            //$('#r').hide();
+            $('input[name="PaymentMethod"]').click(function () {
+                var chk = $('input[name="PaymentMethod"]:checked').val();
+                if (chk == 'Bank')
+                {
+                    $('#txt').empty();
+                    $('#txt').append("Bank");
+                }
+                else
+                {
+                    $('#txt').empty();
+                    $('#txt').append('Receipt');
+
+                }
+            })
+        });
+    </script>
 
     <script>
 
@@ -168,4 +314,3 @@
 
 
 }
-

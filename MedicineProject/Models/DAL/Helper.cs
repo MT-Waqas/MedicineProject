@@ -42,7 +42,32 @@ namespace MedicineProject.Models
             da.Fill(dt);
             return dt;
         }
-
-                 
+        public static DataTable sp_Execute_Table(string Query)
+        {
+            SqlCommand cmd =new SqlCommand(Query, con);
+            cmd.CommandType = CommandType.Text;
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+        public static bool OrderID_Check()
+        {
+           DataTable dataTable = sp_Execute_Table("Select * from tbl_Purchase where  OrderID = (Select top 1 OrderID from tbl_Purchase_Order where ClientID=" + 1 + " order by orderID desc)");
+           DataTable dataTable1= sp_Execute_Table("Select * from tbl_Purchase_Order where ClientID = " + 1);
+            if (dataTable.Rows.Count>0)
+            {
+                return true;
+            }
+            else if (dataTable1.Rows.Count==0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
+        }
     }
 }

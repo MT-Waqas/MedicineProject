@@ -1,4 +1,5 @@
 ﻿using MedicineProject.Models.BLs;
+using MedicineProject.Models.Custom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace MedicineProject.Controllers
 
         public ActionResult Medicine(int? ID)
         {
-            ViewBag.Companies = new SelectList(BL_Company.GetCompanies(1), "CompanyID", "CompanyName");
+            ViewBag.Companies = new SelectList(BL_Company.GetCompanies(1, null), "CompanyID", "CompanyName");
             ViewBag.Medicines = BL_Medicine.GetMedicines(1);
             if (ID > 0)
             {
@@ -24,8 +25,13 @@ namespace MedicineProject.Controllers
                 return View();
             }
         }
-        public ActionResult Save(Medicine med)
+        [HttpPost]
+        public ActionResult Medicine(Medicine med)
         {
+            
+            string path = Server.MapPath("~/Content/Images");
+            med.ImageName = Image.ImageUpload(med.UploadFile,path);
+
             if (ModelState.IsValid)
             {
                 if (med.MedicineID > 0)
@@ -38,9 +44,12 @@ namespace MedicineProject.Controllers
                     BL_Medicine.Save(med);
                     TempData["bit"] = 1;
                 }
+                ModelState.Clear();
             }
-            
-            return RedirectToAction("Medicine");
+            ViewBag.Companies = new SelectList(BL_Company.GetCompanies(1, null), "CompanyID", "CompanyName");
+            ViewBag.Medicines = BL_Medicine.GetMedicines(1);
+            return View("Medicine");
+            //return RedirectToAction("Medicine");
         }
         public ActionResult Delete(int ID)
         {

@@ -1,0 +1,91 @@
+﻿@model MedicineProject.Models.BLs.Purchase
+@{
+    ViewBag.Title = "Stock";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Stock</h2>
+<style>
+</style>
+<div class="">
+    <div class="row">
+        @{int i = 0;}
+
+        @foreach (var item in ViewBag.AllStock)
+        {
+            <div class="col-md-12 col-lg-12 col-xl-3">
+                <div class="card m-b-30" style="border-radius:12px">
+                    <div class="card-body">
+                        <img src="~/Content/Images/@item.ImageName" width="150" height="200" />
+                        <div>
+                            <div><h5>@item.MedicineName</h5></div>
+                            <div class="card-subtitle"> <h6 style="border-bottom:solid 1px; display:inline-block">@item.CompanyName</h6></div>
+                        </div>
+                        <div>
+                            <div class="card" style="box-shadow:5px 10px 18px #888888; border-radius:40px">
+                                <div>
+                                    <div class="card-body">
+                                        <div class="badge badge-pill badge-default" style="font-size: 12px">Available Stock : @item.Quantity</div>
+                                        <div class="badge badge-pill badge-dark" style="font-size: 12px">Price : @item.SalePrice</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    @*<span class="icon-demo-content don" style="color:seagreen"><i class="mdi mdi-check"></i></span>*@
+                    <button style="color:white" id="btnaddtocart" data-id="@item.MedicineID" onclick="AddtoList(@item.MedicineID)" class="btn btn-primary btn-raised mb-0 adtocart">Add To Cart</button>
+                </div>
+            </div>
+            i++;
+        }
+    </div>
+</div>
+
+<script>
+    var btncart;
+    $('.adtocart').click(function () {
+        btncart = $(this).text();
+         $(this).html('');
+        $(this).removeClass('btn btn-primary btn-raised mb-0');
+        $(this).addClass('btn btn-success btn-raised mb-0');
+        $(this).html('Done');
+    });
+    function AddtoList(MedicineID)
+    {
+            $.ajax({
+                type: 'Post',
+                url: '/Stock/CustomerOrders?MedicineID=' + MedicineID,
+                success: function (data) {
+                }
+            });
+        //Check();
+    }
+    function Check() {
+        $.ajax({
+            type: 'Get',
+            url: '/Stock/Checking_Cart',
+            success: function (data) {
+                console.log(data.PurchaseStock);
+                console.log(data);
+                $.each(data.Cart, function (index, element) {
+                    $('.adtocart').each(function () {
+                        var mid = $(this).attr('data-id');
+                        if (mid == element.MedicineID) {
+                            //$(this).attr('disabled', 'disabled');
+                            $(this).html('');
+                            $(this).removeClass('btn btn-primary btn-raised mb-0');
+                            $(this).addClass('btn btn-success btn-raised mb-0');
+                            $(this).html('Done');
+                        }
+                    });
+
+                });
+            }
+        });
+    }
+    $(document).ready(function () {
+        Check();
+    });
+</script>

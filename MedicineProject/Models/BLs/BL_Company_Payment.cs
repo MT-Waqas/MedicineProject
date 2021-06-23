@@ -18,10 +18,11 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("CompanyID",cmppay.CompanyID),
                 new SqlParameter("TotalAmount",cmppay.TotalAmount),
                 new SqlParameter("PaidAmount",cmppay.PaidAmount),
-                new SqlParameter("RemainingAmount",cmppay.RemainingAmount),
+                new SqlParameter("RemainingAmount",cmppay.TotalAmount-cmppay.PaidAmount),
                 new SqlParameter("PaymentDate",cmppay.PaymentDate),
-                new SqlParameter("BankName",cmppay.BankName),
-                new SqlParameter("ReceiptNumber",cmppay.ReceiptNumber),
+                new SqlParameter("PaymentMethod",cmppay.PaymentMethod),
+                new SqlParameter("ReceiptNumber_or_BankName",cmppay.ReceiptNumber_or_BankName),
+                new SqlParameter("InvoiceID",cmppay.InvoiceID),
                 new SqlParameter("type",Actions.Insert)
             };
             Helper.sp_ExecuteQuery("sp_CompanyPayment", prm);
@@ -34,10 +35,10 @@ namespace MedicineProject.Models.BLs
                 new SqlParameter("CompanyID",cmppay.CompanyID),
                 new SqlParameter("TotalAmount",cmppay.TotalAmount),
                 new SqlParameter("PaidAmount",cmppay.PaidAmount),
-                new SqlParameter("RemainingAmount",cmppay.RemainingAmount),
+                new SqlParameter("RemainingAmount",cmppay.TotalAmount-cmppay.PaidAmount),
                 new SqlParameter("PaymentDate",cmppay.PaymentDate),
-                new SqlParameter("BankName",cmppay.BankName),
-                new SqlParameter("ReceiptNumber",cmppay.ReceiptNumber),
+                new SqlParameter("PaymentMethod",cmppay.PaymentMethod),
+                new SqlParameter("ReceiptNumber_or_BankName",cmppay.ReceiptNumber_or_BankName),
                 new SqlParameter("type",Actions.Update)
             };
             Helper.sp_ExecuteQuery("sp_CompanyPayment", prm);
@@ -51,35 +52,54 @@ namespace MedicineProject.Models.BLs
             };
             Helper.sp_ExecuteQuery("sp_CompanyPayment", prm);
         }
-        public static CompanyPayment GetCompanyPayment(int ID)
+        public static CompanyPayment GetCompanyPayment(int? ID, int? InvoiceId)
         {
             SqlParameter[] prm = new SqlParameter[]
             {
                new SqlParameter("CompanyPaymentID",ID),
+                new SqlParameter("InvoiceID",InvoiceId),
                new SqlParameter("type",Actions.Select),
             };
             DataTable dt = Helper.sp_Execute_Table("sp_CompanyPayment", prm);
             CompanyPayment cmppayment = new CompanyPayment();
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0 && ID>0)
             {
+                cmppayment.CompanyPaymentID = Convert.ToInt32(dt.Rows[0]["CompanyPaymentID"]);
                 cmppayment.CompanyID = Convert.ToInt32(dt.Rows[0]["CompanyID"]);
                 cmppayment.TotalAmount = Convert.ToInt32(dt.Rows[0]["TotalAmount"]);
                 cmppayment.PaidAmount = Convert.ToInt32(dt.Rows[0]["PaidAmount"]);
                 cmppayment.RemainingAmount = Convert.ToInt32(dt.Rows[0]["RemainingAmount"]);
                 cmppayment.PaymentDate = Convert.ToDateTime(dt.Rows[0]["PaymentDate"]);
-                cmppayment.BankName = Convert.ToString(dt.Rows[0]["BankName"]);
-                cmppayment.ReceiptNumber = Convert.ToString(dt.Rows[0]["ReceiptNumber"]);
-            }
+                cmppayment.PaymentMethod = Convert.ToString(dt.Rows[0]["PaymentMethod"]);
+                cmppayment.ReceiptNumber_or_BankName = Convert.ToString(dt.Rows[0]["ReceiptNumber_or_BankName"]);
+                cmppayment.InvoiceID = Convert.ToInt32(dt.Rows[0]["InvoiceID"]);
+            } 
             return cmppayment;
         }
-
-        public static List<CompanyPayment> GetCompanyPayments(int ClientID)
+        public static decimal GetRemaining(int InvoiceId)
+        {
+            decimal RemainingAmount=0;
+            SqlParameter[] prm = new SqlParameter[]
+            {
+               new SqlParameter("InvoiceID",InvoiceId),
+               new SqlParameter("type",Actions.Select_Remaining),
+            };
+            DataTable dt = Helper.sp_Execute_Table("sp_CompanyPayment", prm); 
+            if (dt.Rows.Count >0)
+            { 
+                RemainingAmount  = Convert.ToDecimal(dt.Rows[0]["RemainingAmount"]);
+            }
+            return RemainingAmount;
+        }
+        public static List<CompanyPayment> GetCompanyPayments(int ClientID,int InvoiceID,int CompanyID)
         {
             List<CompanyPayment> cmppayments = new List<CompanyPayment>();
             SqlParameter[] prm = new SqlParameter[]
             {
              new SqlParameter("ClientID",ClientID),
-               new SqlParameter("type",Actions.Select)
+             new SqlParameter("InvoiceID",InvoiceID),
+             new SqlParameter("CompanyID",CompanyID),
+             new SqlParameter("type",Actions.Select)
             };
             DataTable dt = Helper.sp_Execute_Table("sp_CompanyPayment", prm);
             foreach (DataRow dr in dt.Rows)
@@ -92,8 +112,9 @@ namespace MedicineProject.Models.BLs
                 cmppayment.PaidAmount = Convert.ToDecimal(dr["PaidAmount"]);
                 cmppayment.RemainingAmount = Convert.ToDecimal(dr["RemainingAmount"]);
                 cmppayment.PaymentDate = Convert.ToDateTime(dr["PaymentDate"]);
-                cmppayment.BankName = Convert.ToString(dr["BankName"]);
-                cmppayment.ReceiptNumber = Convert.ToString(dr["ReceiptNumber"]);
+                cmppayment.PaymentMethod = Convert.ToString(dr["PaymentMethod"]);
+                cmppayment.ReceiptNumber_or_BankName = Convert.ToString(dr["ReceiptNumber_or_BankName"]);
+                cmppayment.InvoiceID = Convert.ToInt32(dr["InvoiceID"]);
                 cmppayments.Add(cmppayment);
             }
             return cmppayments;
@@ -101,17 +122,26 @@ namespace MedicineProject.Models.BLs
     }
     public class CompanyPayment
     {
-        public int CompanyPaymentID { get; set; }
+        public int? CompanyPaymentID { get; set; }
+        [Required(ErrorMessage = "Please Select the Company Name")]
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
+        [Required(ErrorMessage = "Please Enter Total Amount")]
         public decimal TotalAmount { get; set; }
+        [Required(ErrorMessage = "Please Enter Remaining Amount")]
         public decimal RemainingAmount { get; set; }
-        public decimal PaidAmount { get; set; }      
+        [Required(ErrorMessage = "Please Enter Paid Amount")]
+        public decimal PaidAmount { get; set; }
+        [Required(ErrorMessage = "Please Select Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime PaymentDate { get; set; }
-        public string BankName { get; set; }
-        public string ReceiptNumber { get; set; }
+        [Required(ErrorMessage = "Please Enter Bank Name")]
+        public string PaymentMethod { get; set; }
+        [Required]
+        public string ReceiptNumber_or_BankName { get; set; }
+        public int InvoiceID { get; set; }
         public int IsDelete { get; set; }
         public int ClientID { get; set; }
+
     }
 }

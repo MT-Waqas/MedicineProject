@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "CustomerSales";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Sales</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-xl-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <h4 class="mt-0 header-title">Customer Orders</h4>
+                    <p class="text-muted font-14"></p>
+                    <div class="general-label">
+                        <table class="table" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>OrderID</th>
+                                    <th>CustomerName</th>
+                                    <th>EmployeeName</th>
+                                    <th>TotalAmount</th>
+                                    <th>Quantity</th>
+                                    <th>SaleDate</th>
+                                    <th>IsPaid</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Sales)
+                                {
+                                    <tr>
+                                        <td>@item.OrderID</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.EmployeeName</td>
+                                        <td>@item.TotalAmount.ToString("0.0") </td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.SaleDate.ToString("dd-MMMM-yyy")</td>
+                                        <td>
+                                            @if (item.IsPaid == 0)
+                                            {
+                                                <span class="badge badge-info">Still not Paid</span>
+
+                                            }
+                                            else if (item.IsPaid == 1)
+                                            {
+                                                <span class="badge badge-success">Paid</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-primary">Remaining</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (@item.IsPaid == 1)
+                                            {
+                                                @Html.ActionLink(" ", "CustomerPayment", "CustomerPayment", new { OrderID = item.OrderID, CustomerID = item.CustomerID, TotalAmount = item.TotalAmount }, new { @class = "fa fa-paypal size btn btn-default disabled", title = "Paid" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(" ", "CustomerPayment", "CustomerPayment", new { OrderID = item.OrderID, CustomerID = item.CustomerID}, new { @class = "fa fa-paypal size btn btn-default ", title = "Payment" })
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @*@Html.ActionLink("Details", "All_Purchases", "Purchase", new {CustomerID=item.CustomerID}, new { @class = "mdi mdi-file-document size1 btn btn-default", title = "Details" }) &nbsp;&nbsp;*@
+                                            @*@Html.ActionLink(" ", "Index", "Test", new { orderid = @item.OrderID, invoiceid = @item.InvoiceID, cid = @item.CompanyID }, new { @class = "mdi mdi-file-document size1 btn btn-default", title = "Details" }) &nbsp;&nbsp;*@
+                                            <button class="size1 mdi mdi-details btn btn-default anchorDetail" data-id="@item.OrderID" title="Products"> </button>
+                                           
+
+                                                @*@Html.ActionLink(" ", "CustomerPayment", "CustomerPayment", new {CustomerID=item.CustomerID}, new { @class = "fa fa-paypal size btn btn-default disabled", title = "Paid" })*@
+
+                                            
+                                       
+                                           
+                                                
+                                        </td>
+                                      
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

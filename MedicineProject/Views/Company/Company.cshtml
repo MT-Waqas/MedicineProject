@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<div class="card-body">
+<div class=" card card-body">
     <h4 class="mt-0 header-title">Company Registory</h4>
     <p class="text-muted font-14">Please Enter the Valid Information...@*</code>*@.</p>
     <div class="general-label">
@@ -13,14 +13,14 @@
         @using (Html.BeginForm("Save", "Company", FormMethod.Post))
         {
             <div class="form-group bmd-form-group">
-                <label for="exampleInputEmail1" class="bmd-label-floating ">Employee Name</label>
+                <label for="exampleInputEmail1" class="bmd-label-floating ">Company Name</label>
                 @Html.TextBoxFor(x => x.CompanyName, new { @class = "form-control" })
 
                 <span class="bmd-help">Enter valid Company Name..</span>
             </div>
 
             <div class="form-group bmd-form-group">
-                <label for="exampleInputPassword1" class="bmd-label-floating">CNIC</label>
+                <label for="exampleInputPassword1" class="bmd-label-floating">Contact</label>
                 @Html.TextBoxFor(x => x.Contact, new { @class = "form-control" })
                 <span class="bmd-help">Enter valid Contact..</span>
             </div>
